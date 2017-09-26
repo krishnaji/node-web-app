@@ -1,0 +1,35 @@
+podTemplate(label: 'jenkins-pipeline', containers: [
+    containerTemplate(name: 'jnlp', image: 'jenkinsci/jnlp-slave:2.62', args: '${computer.jnlpmac} ${computer.name}', workingDir: '/home/jenkins', resourceRequestCpu: '200m', resourceLimitCpu: '200m', resourceRequestMemory: '256Mi', resourceLimitMemory: '256Mi'),
+    containerTemplate(name: 'docker', image: 'docker:1.12.6',       command: 'cat', ttyEnabled: true),
+    containerTemplate(name: 'kubectl', image: 'lachlanevenson/k8s-kubectl:v1.4.8', command: 'cat', ttyEnabled: true)
+],
+volumes:[
+    hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock'),
+])
+{
+node ('jenkins-pipeline') {
+
+    def app
+
+    stage('Clone') {
+       
+        checkout scm
+    }
+
+    stage('Build & Push') {
+        container('docker') {
+               
+                    
+                withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'az-acr', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
+                println "-u ${env.USERNAME} -p ${env.PASSWORD} ${env.BUILD_NUMBER}"
+                 sh 'docker login -u ${env.USERNAME} -p ${env.PASSWORD} fancy.azurecr.io'
+                 }
+                 sh 'docker build -t node-web-app .'
+                 sh 'docker tag node-web-app fancy.azurecr.io/node-web-app:${env.BUILD_NUMBER}'
+                 sh 'docker push fancy.azurecr.io/node-web-app:${env.BUILD_NUMBER}'
+                
+        }
+
+        }
+}
+}
