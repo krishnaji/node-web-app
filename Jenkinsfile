@@ -15,8 +15,8 @@ podTemplate(label: 'docker',
           sh "docker login -u ${env.USERNAME} -p ${env.PASSWORD} fancy.azurecr.io"
         }
         sh "docker images " 
-        sh "docker tag ${image} fancy.azurecr.io/node-web-app:${env.BUILD_NUMBER}"
-        sh "docker push fancy.azurecr.io/node-web-app:${env.BUILD_NUMBER}"
+        sh "docker tag ${image} fancy.azurecr.io/node-web-app:${env.GIT_COMMIT }"
+        sh "docker push fancy.azurecr.io/node-web-app:${env.GIT_COMMIT}"
            }
     }
     }
