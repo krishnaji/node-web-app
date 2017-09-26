@@ -15,21 +15,14 @@ node ('jenkins-pipeline') {
        
         checkout scm
     }
-
-    stage('Build & Push') {
+    stage ('Build') {
         container('docker') {
-               
-                    
-                withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'az-acr', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
-                println "-u ${env.USERNAME} -p ${env.PASSWORD} ${env.BUILD_NUMBER}"
-                 sh 'docker login -u ${env.USERNAME} -p ${env.PASSWORD} fancy.azurecr.io'
-                 }
-                 sh 'docker build -t node-web-app .'
-                 sh 'docker tag node-web-app fancy.azurecr.io/node-web-app:${env.BUILD_NUMBER}'
-                 sh 'docker push fancy.azurecr.io/node-web-app:${env.BUILD_NUMBER}'
-                
+        sh 'docker login -u fancy -p r=SIM=V/OY+/g+/v=h/X=C=+8f6itDz9 fancy.azurecr.io'
+        sh 'docker build -t node-web-app .'
+        sh 'docker tag node-web-app fancy.azurecr.io/node-web-app:${env.BUILD_NUMBER}'
+        sh 'docker push fancy.azurecr.io/node-web-app:${env.BUILD_NUMBER}'
+            
         }
-
-        }
-}
+    }
+    }
 }
