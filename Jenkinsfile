@@ -18,6 +18,7 @@ node ('jenkins-pipeline') {
     stage ('Build') {
         container('docker') {
         sh 'docker login -u fancy -p r=SIM=V/OY+/g+/v=h/X=C=+8f6itDz9 fancy.azurecr.io'
+        sh 'cat Dockerfile'
         sh 'docker build -t node-web-app .'
         sh 'docker tag node-web-app fancy.azurecr.io/node-web-app:${env.BUILD_NUMBER}'
         sh 'docker push fancy.azurecr.io/node-web-app:${env.BUILD_NUMBER}'
