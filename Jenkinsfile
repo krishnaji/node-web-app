@@ -1,5 +1,8 @@
 podTemplate(label: 'docker',
-  containers: [containerTemplate(name: 'docker', image: 'docker:1.11', ttyEnabled: true, command: 'cat')],
+  containers: [containerTemplate(name: 'docker', image: 'docker:1.11', ttyEnabled: true, command: 'cat')
+  containerTemplate(name: 'kubectl', image: 'smesch/kubectl', command: 'cat', ttyEnabled: true
+  , volumes:[secretVolume(secretName: 'config', mountPath: '/root/.kube')])
+  ],
   volumes: [hostPathVolume(hostPath: '/var/run/docker.sock', mountPath: '/var/run/docker.sock')]
   ) {
   def image = "node-web-app"
@@ -18,6 +21,11 @@ podTemplate(label: 'docker',
         sh "docker tag ${image} fancy.azurecr.io/node-web-app:${env.BUILD_NUMBER}"
         sh "docker push fancy.azurecr.io/node-web-app:${env.BUILD_NUMBER}"
            }
+    }
+    stage('Publish'){
+        container('kubectl') {
+            sh "kubectl cluster-info"
+        }
     }
     }
 }
