@@ -1,5 +1,5 @@
 podTemplate(label: 'docker',
-  containers: [containerTemplate(name: 'docker', image: 'docker:1.11', ttyEnabled: true, command: 'cat')
+  containers: [containerTemplate(name: 'docker', image: 'docker:1.11', ttyEnabled: true, command: 'cat'),
   containerTemplate(name: 'kubectl', image: 'smesch/kubectl', command: 'cat', ttyEnabled: true
   , volumes:[secretVolume(secretName: 'config', mountPath: '/root/.kube')])
   ],
