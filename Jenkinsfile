@@ -24,7 +24,7 @@ podTemplate(label: 'docker',
     }
     stage('Publish'){
         container('kubectl') {
-            sh "kubectl set image deployment/node-web-app node-web-app=fancy.azurecr.io/node-web-app:${env.BUILD_NUMBER}"
+            sh "kubectl set image deployment/node-web-app node-web-app=fancy.azurecr.io/node-web-app:${env.BUILD_NUMBER} --namespace default"
         }
     }
     }
